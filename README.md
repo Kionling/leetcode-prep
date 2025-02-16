@@ -262,6 +262,14 @@ def count_occur(arr, target):
 
 # 🗺️ Hashmap notes
 
+## When to use
+✅ Fast Lookups (O(1))
+✅ Fast Insertions & Deletions (O(1))
+✅ Counting Frequencies
+✅ Mapping Keys to Values
+
+
+
 **Creating a dictionary**
 ```
 my_dict = {"name": "Alice", "age": 25, "city": "NYC"}
@@ -314,6 +322,11 @@ def word_count(words):
         else:
             count_dict[word] = 1
     return count_dict
+```
+**Other method Using Counter**
+```
+def word_count(words):
+    return dict(Counter(words))
 ```
 
 
@@ -376,4 +389,145 @@ print(sorted_desc)  # [9, 5, 4, 3, 1, 1]
 -----
 # HashSets 
 
-* Does not allow duplicate
+* Does not store duplicates
+* Fast lookups
+
+## When to use a Hash Set
+✅ Fast Lookups (O(1))
+✅ Removing Duplicates
+✅ Membership Testing (if x in set)
+✅ Finding Common Elements
+
+
+```
+#Creating a set 
+my_set = {1, 2, 3, 4}
+
+#Creating an empty set 
+my_set = set()
+
+
+print(my_set)
+print(empty_set)
+```
+* An empty set initializes: {}
+
+## Adding 
+
+```
+my_set.add(5)
+print(my_set)  # {1, 2, 3, 4, 5}
+```
+
+## Removing
+
+```
+val = my_set.pop()  # Removes a random element
+print(val, my_set)
+```
+
+## Checking for elements
+
+```
+if 3 in my_set:
+    print("3 is in the set!")
+```
+
+## Set operations
+Sets support union, intersection, and difference
+Returns a new set containing all unique elements
+```
+set1 = {1, 2, 3}
+set2 = {3, 4, 5}
+
+print(set1 | set2)  # {1, 2, 3, 4, 5}
+print(set1.union(set2))  # Same output
+```
+## Intersection
+Returns common elements between two sets
+```
+print(set1 & set2)  # {3}
+print(set1.intersection(set2))  # Same output
+```
+
+## Difference
+Returns elements that are only in the first set
+```
+print(set1 - set2)  # {1, 2}
+print(set1.difference(set2))  # Same output
+```
+## Symmetric difference
+Retunrs elements that are in either set, but not both
+```
+print(set1 ^ set2)  # {1, 2, 4, 5}
+print(set1.symmetric_difference(set2))  # Same output
+```
+## Example use
+Converting between sets and lists
+```
+nums = [1, 2, 2, 3, 3, 4]
+unique_nums = set(nums)
+print(unique_nums)  # {1, 2, 3, 4}
+
+#Convert back to list
+unique_list = list(unique_nums)
+print(unique_list)  #[1, 2, 3, 4]
+```
+
+## Looping through a set
+```
+for num in my_set:
+print(num)
+```
+
+## Set comprehension 
+```
+squared_set = {x**2 for x in range(5)}
+print(squared_set)  # {0, 1, 4, 9, 16}
+```
+
+## Problems 
+Finding duplications with a Hash Set
+```
+def find_duplicates(nums):
+    seen = set()
+    duplicates = set()
+
+    for num in nums:
+        if num in seen:
+            duplicates.add(num)
+        else:
+            seen.add(num)
+
+    return duplicates
+
+print(find_duplicates([1, 2, 3, 4, 2, 5, 6, 3]))  
+# Expected: {2, 3}
+```
+
+Finding common elements
+```
+def common_elements(list1, list2):
+    # Convert both lists to sets and find the intersection
+    return set(list1) & set(list2)
+
+# Test case
+print(common_elements([1, 2, 3], [2, 3, 4]))  
+# Expected output: {2, 3}
+```
+* Use the set intersection (&) operator to find elements that exist in both sets.
+* Return the intersection set, which contains only the common elements.
+ **Time complexity:**
+* Converting lists to sets: O(n) + O(m)
+* Finding the intersection: O(min(n, m))
+* Overall complexity: O(n + m) (much faster than nested loops O(n*m)).
+
+Removing duplicates
+```
+def remove_duplicates(arr):
+    return set(arr)
+print(remove_duplicates([1, 1, 2, 2, 3, 4, 4, 5]))  
+# Expected: [1, 2, 3, 4, 5]
+```
+
+
