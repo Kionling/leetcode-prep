@@ -380,6 +380,53 @@ sorted_arr = sorted(arr)  # Default: Ascending order
 print(sorted_arr)  # [1, 1, 3, 4, 5, 9]
 ```
 * This uses the Sort() method to sort a unsorted array. 
+# Two Pointers Three Sum
+```
+def three_sum(nums):
+    """
+    Given an integer array nums, return all unique triplets [nums[i], nums[j], nums[k]]
+    such that i != j, i != k, j != k, and nums[i] + nums[j] + nums[k] == 0.
+
+    Input: nums = [-1, 0, 1, 2, -1, -4]
+    Output: [[-1, -1, 2], [-1, 0, 1]]
+    """
+    # TODO: Implement using the two pointers approach
+    nums.sort()
+    result = []
+    
+    for i in range(len(nums)):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        left = i + 1
+        right = len(nums) - 1
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+            
+            if total == 0:
+                result.append([nums[i], nums[left], nums[right]])
+
+                left += 1
+                right -= 1
+                
+                while left < right and nums[left] == nums[left - 1]:
+                    left += 1
+                
+                while left < right and nums[right] == nums[right + 1]:
+                    right -= 1 
+                    
+            elif total < 0:
+                left += 1 
+            else:
+                right -= 1
+       
+    return result
+    
+print(three_sum([-1, 0, 1, 2, -1, -4]))
+```
+
+
+
+
 
 **Sorting in descending order**
 ```
@@ -530,4 +577,86 @@ print(remove_duplicates([1, 1, 2, 2, 3, 4, 4, 5]))
 # Expected: [1, 2, 3, 4, 5]
 ```
 
+# Sliding window
+✅ Use When:
+* You're working with contiguous chunks of data (substrings, subarrays).
 
+* You need to find the maximum/minimum/longest/shortest subsequence or window that meets some dynamic constraint.
+
+* You need to track state within a moving section of a list (e.g., sum, distinct characters, frequency).
+## The Algorithm
+```
+# Longest substring without repeating characters
+s = "abcabcbb"
+char_set = set()
+left = 0
+max_len = 0
+
+for right in range(len(s)):
+    while s[right] in char_set:
+        char_set.remove(s[left])
+        left += 1
+    char_set.add(s[right])
+    max_len = max(max_len, right - left + 1)
+```
+Finding the max average with a fixed window size 
+
+```
+ def findMaxAverage(self, nums: List[int], k: int) -> float:
+        
+        curr_sum = 0
+        left = 0
+        right = len(nums)
+
+        for i in range(k):
+            curr_sum += nums[i]
+        max_avg = curr_sum / k 
+
+        for i in range(k , right):
+            curr_sum += nums[i]
+            curr_sum -= nums[i-k]
+            avg = curr_sum / k 
+            max_avg = max(max_avg, avg)
+        return max_avg 
+```
+
+# Hash Maps & Sets
+
+## Contains duplicates
+```
+def containsDuplicate(nums):
+    seen = set()
+    for num in nums:
+        if num in seen:
+            return True
+        seen.add(num)
+    return False
+```
+
+## Happy Number 
+```
+def isHappy(n):
+    seen = set()
+    while n != 1 and n not in seen:
+        seen.add(n)
+        n = sum(int(d)**2 for d in str(n))
+    return n == 1
+```
+
+# Binary Search
+
+```
+def binary_search(nums, target):
+    left, right = 0, len(nums) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid  # Found!
+        elif nums[mid] < target:
+            left = mid + 1  # Search right half
+        else:
+            right = mid - 1  # Search left half
+
+    return -1  # Not found
+```
