@@ -424,8 +424,39 @@ def three_sum(nums):
 print(three_sum([-1, 0, 1, 2, -1, -4]))
 ```
 
+# Two pointers 4sum
+```
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        nums.sort()
+        result = []
 
+        for i in range(len(nums) - 3):
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
 
+            for j in range(i + 1, len(nums) - 2):
+                if j > i + 1 and nums[j] == nums[j - 1]:
+                    continue
+                left, right = j + 1, len(nums) - 1
+
+                while left < right:
+                    four_sum = nums[i] + nums[j] + nums[left] + nums[right]
+                    if four_sum == target:
+                        result.append([nums[i], nums[j], nums[left], nums[right]])
+                        left += 1
+                        right -= 1
+
+                        while left < right and nums[left] == nums[left - 1]:
+                            left += 1
+                        while left < right and nums[right] == nums[right + 1]:
+                            right -= 1
+                    elif four_sum < target:
+                        left += 1
+                    else: 
+                        right -= 1
+        return result
+```
 
 
 **Sorting in descending order**
@@ -588,16 +619,19 @@ print(remove_duplicates([1, 1, 2, 2, 3, 4, 4, 5]))
 ```
 # Longest substring without repeating characters
 s = "abcabcbb"
-char_set = set()
-left = 0
-max_len = 0
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        left = 0 
+        sett = set()
+        max_len = 0 
 
-for right in range(len(s)):
-    while s[right] in char_set:
-        char_set.remove(s[left])
-        left += 1
-    char_set.add(s[right])
-    max_len = max(max_len, right - left + 1)
+        for right in range(len(s)):
+            while s[right] in sett:
+                sett.remove(s[left])
+                left += 1 
+            window = (right - left) + 1
+            max_len = max(max_len, window)
+            sett.add(s[right])
+        return max_len
 ```
 Finding the max average with a fixed window size 
 
@@ -645,6 +679,8 @@ def isHappy(n):
 
 # Binary Search
 
+## Iterative
+
 ```
 def binary_search(nums, target):
     left, right = 0, len(nums) - 1
@@ -659,4 +695,51 @@ def binary_search(nums, target):
             right = mid - 1  # Search left half
 
     return -1  # Not found
+```
+## Recursive 
+```
+def binary_search_recursive(nums, target, left, right):
+    if left > right:
+        return -1  # Base case: not found
+
+    mid = (left + right) // 2
+
+    if nums[mid] == target:
+        return mid
+    elif nums[mid] < target:
+        return binary_search_recursive(nums, target, mid + 1, right)
+    else:
+        return binary_search_recursive(nums, target, left, mid - 1)
+```
+
+## First Bad Version
+```
+def firstBadVersion(n: int) -> int:
+    left, right = 1, n
+
+    while left < right:
+        mid = (left + right) // 2
+
+        if isBadVersion(mid):
+            right = mid  # potential answer, search left
+        else:
+            left = mid + 1  # must be after mid
+
+    return left  # left == right, first bad version
+```
+
+## Search Insert Position
+```
+def searchInsert(self, nums: List[int], target: int) -> int:
+    left, right = 0, len(nums) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return left
 ```
