@@ -743,3 +743,307 @@ def searchInsert(self, nums: List[int], target: int) -> int:
             right = mid - 1
     return left
 ```
+
+
+# Stacks and Queues
+Implements a Last In First Out (LIFO) principle
+## Basic Stack Implementation
+```
+stack = []
+
+# Push
+stack.append('A')
+stack.append('B')
+stack.append('C')
+print("Stack: ", stack)
+
+# Pop
+element = stack.pop()
+print("Pop: ", element)
+
+# Peek
+topElement = stack[-1]
+print("Peek: ", topElement)
+
+# isEmpty
+isEmpty = not bool(stack)
+print("isEmpty: ", isEmpty)
+
+# Size
+print("Size: ",len(stack))
+```
+
+
+## Valid Parentheses (Stack)
+```
+def is_valid_parentheses(s: str) -> bool:
+    # Dictionary to map closing brackets to corresponding opening brackets
+    bracket_map = {')': '(', '}': '{', ']': '['}
+    stack = []
+    
+    for char in s:
+        if char in bracket_map.values():
+            # If it is an opening bracket, push onto the stack
+            stack.append(char)
+        elif char in bracket_map:
+            # If it's a closing bracket, check if the stack is not empty and matches the top element
+            if not stack or stack.pop() != bracket_map[char]:
+                return False
+        else:
+            # If the character is not a bracket (optional handling based on the problem statement)
+            continue
+    
+    # If the stack is empty, all opening brackets have been matched
+    return len(stack) == 0
+
+# Test cases
+print(is_valid_parentheses("({[]})"))  # Expected output: True
+print(is_valid_parentheses("({[)]}"))  # Expected output: False
+print(is_valid_parentheses(""))        # Expected output: True
+```
+
+## Min Stack
+```
+class MinStack:
+    def __init__(self):
+        """
+        Initialize two stacks:
+        - self.stack: to store the actual values.
+        - self.min_stack: to store the minimum value at each push.
+        """
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, x: int) -> None:
+        self.stack.append(x)
+        # Push the new element onto the min_stack if it's the first element
+        # or if it's smaller than the current minimum.
+        if not self.min_stack or x <= self.min_stack[-1]:
+            self.min_stack.append(x)
+        else:
+            # Else, push the current minimum again.
+            self.min_stack.append(self.min_stack[-1])
+
+    def pop(self) -> None:
+        # Pop from both stacks.
+        if self.stack:
+            self.stack.pop()
+            self.min_stack.pop()
+
+    def top(self) -> int:
+        # Return the top element of the main stack.
+        if self.stack:
+            return self.stack[-1]
+        raise IndexError("Stack is empty")
+
+    def getMin(self) -> int:
+        # Return the top element of the min stack which is the current minimum.
+        if self.min_stack:
+            return self.min_stack[-1]
+        raise IndexError("Stack is empty")
+
+# Example usage:
+if __name__ == "__main__":
+    minStack = MinStack()
+    minStack.push(-2)
+    minStack.push(0)
+    minStack.push(-3)
+    print("Current Min:", minStack.getMin())   # Expected output: -3
+    minStack.pop()
+    print("Top:", minStack.top())              # Expected output: 0
+    print("Current Min:", minStack.getMin())   # Expected output: -2
+
+```
+
+# Queues 
+Implements a First In First Out Principle (FIFO)
+* Primary Operations:
+
+* Enqueue: Add an element to the back of the queue.
+
+* Dequeue: Remove an element from the front of the queue.
+
+* Peek/Front: Look at the element at the front without removing it.
+
+* isEmpty: Check if the queue is empty.
+
+* sSize: Optionally, track the number of elements in the queue.
+
+
+## Basic Implementation 
+```
+from collections import deque
+
+# Create a queue
+queue = deque()
+
+# Enqueue elements
+queue.append('A')
+queue.append('B')
+queue.append('C')
+
+print("Initial queue:", list(queue))
+
+# Dequeue elements
+first = queue.popleft()  # 'A' is removed
+print("Dequeued element:", first)
+print("Queue after dequeue:", list(queue))
+
+# Peek at the front element without removing it
+if queue:
+    front = queue[0]
+    print("Front element:", front)
+```
+
+# Implementing a queue using stacks
+```
+class MyQueue:
+
+    def __init__(self):
+        self.s1 = []
+        self.s2 = []
+
+    def push(self, x: int) -> None:
+        while self.s1:
+            self.s2.append(self.s1.pop())
+        self.s1.append(x)
+        while self.s2:
+            self.s1.append(self.s2.pop())
+
+    def pop(self) -> int:
+        return self.s1.pop()
+
+    def peek(self) -> int:
+        return self.s1[-1]
+        
+
+    def empty(self) -> bool:
+        return not self.s1
+        
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+```
+
+## Time needed to buy tickets:
+```
+class Solution:
+    def timeRequiredToBuy(self, tickets: List[int], k: int) -> int:
+        queue = deque()
+
+        # Initialize the queue with ticket indices
+        for i in range(len(tickets)):
+            queue.append(i)
+
+        time = 0
+
+        # Loop until the queue is empty
+        while queue:
+            # Increment the time counter for each iteration
+            time += 1
+
+            # Get the front element of the queue
+            front = queue.popleft()
+
+            # Buy a ticket for the front person
+            tickets[front] -= 1
+
+            # If person k bought all their tickets, return time
+            if k == front and tickets[front] == 0:
+                return time
+
+            # Re-add the current index to the queue for the next iteration
+            if tickets[front] != 0:
+                queue.append(front)
+
+        return time
+```
+
+# Linked List
+
+## Reversing Linked List 
+
+```
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        # Initialize previous pointer to None and current pointer to head
+        # Example:
+        #   List: head -> [1] -> [2] -> [3] -> None
+        #   prev = None, curr = [1]
+        prev = None
+        curr = head
+        
+        # Iterate until curr becomes None (end of list)
+        while curr:
+            # Save the next node
+            # For curr = [1] -> [2] -> [3] -> None, next_temp = [2] -> [3] -> None
+            next_temp = curr.next
+            
+            # Reverse the current node's pointer:
+            # Change curr.next from pointing to [2] to pointing to prev (initially None)
+            # Now [1] -> None
+            curr.next = prev
+            
+            # Move the prev pointer forward:
+            # prev now becomes the current node ([1])
+            prev = curr
+            
+            # Move the current pointer to the next node in original list:
+            # curr becomes next_temp, i.e., [2] -> [3] -> None
+            curr = next_temp
+            
+            # Visual after first iteration:
+            #   Reversed part: None <- [1]
+            #   Remaining part: [2] -> [3] -> None
+            #
+            # Second iteration:
+            #   prev = [1] -> None, curr = [2] -> [3] -> None
+            #   Save next_temp = [3] -> None
+            #   Reverse pointer: [2].next now points to [1] (prev)
+            #   List becomes: None <- [1] <- [2]
+            #   And so on...
+        
+        # When curr is None, the entire list has been reversed.
+        # prev points to the new head of the reversed list.
+        return prev
+```
+
+## Reverse A Linked List
+```
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
+
+        if not head or left == right:
+            return head
+
+        dummy = ListNode(0, head)
+        prev = dummy
+
+        for _ in range(left - 1):
+            prev = prev.next
+
+        cur = prev.next
+        for _ in range(right - left):
+            temp = cur.next
+            cur.next = temp.next
+            temp.next = prev.next
+            prev.next = temp
+
+        return dummy.next
+```
